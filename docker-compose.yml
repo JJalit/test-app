@@ -1,31 +1,34 @@
-version: "3"
-services: 
+version: "3.3"
+services:
   frontend:
     build:
       dockerfile: Dockerfile.dev
       context: ./client
-    volumes: 
+    volumes:
       - /app/node_modules
       - ./client:/app
     stdin_open: true
 
   nginx:
+    depends_on:
+      - frontend
+      - backend
     restart: always
     build:
       dockerfile: Dockerfile
       context: ./nginx
-    ports: 
+    ports:
       - "3000:80"
-    
+
   backend:
-    links: 
+    links:
       - mongo
     build:
       dockerfile: Dockerfile.dev
       context: ./server
-    ports: 
+    ports:
       - "5000:5000"
-    depends_on: 
+    depends_on:
       - mongo
     volumes:
       - /app/node_modules
@@ -33,8 +36,8 @@ services:
 
   mongo:
     restart: always
-    build: 
+    build:
       dockerfile: Dockerfile
       context: ./mongo
-    ports: 
+    ports:
       - "27017:27017"
