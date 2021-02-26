@@ -1,0 +1,51 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+      "image": "jaeha23/test-client",
+      "hostname": "client",
+      "essential": false,
+      "memory": 128,
+      "command": ["tail", "-f", "/bin/bash"]
+    },
+    {
+      "name": "server",
+      "image": "jaeha23/test-server",
+      "hostname": "server",
+      "essential": false,
+      "links": ["mongo"],
+      "memory": 128,
+      "command": ["tail", "-f", "/bin/bash"]
+    },
+    {
+      "name": "mongo",
+      "image": "jaeha23/test-mongo",
+      "hostname": "mongo",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 27017,
+          "containerPort": 27017
+        }
+      ],
+      "memory": 128,
+      "command": ["tail", "-f", "/bin/bash"]
+    },
+    {
+      "name": "nginx",
+      "image": "jaeha23/test-nginx",
+      "hostname": "nginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": ["client", "server"],
+      "memory": 128,
+      "command": ["tail", "-f", "/bin/bash"]
+    }
+  ]
+}
